@@ -1,18 +1,62 @@
-HTML    Result
-Edit on
-<html lang="en">
+<html lang="en" ng-app="music">
 <head>
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 </head>
-<body ng-app="music" ng-cloak>
-First commit
+<body ng-cloak ng-controller="ListController">
+
+<div layout layout-align="center center">
+    <md-input-container>
+        <label>Search</label>
+        <input ng-model="filter" ng-change="filterChanged()">
+    </md-input-container>
+</div>
+<div layout layout-align="center center">
+    <md-checkbox ng-model="limit"></md-checkbox>
+    <md-input-container>
+        <label>Limit artists</label>
+        <input ng-model="maxResults">
+    </md-input-container>
+</div>
+<div layout layout-align="center center">
+    <md-checkbox ng-model="expandAll">Expand all</md-checkbox>
+</div>
+<div layout layout-align="center center">
+    <md-input-container>
+        <label>x</label>
+        <input ng-model="times" type="number" min="1" max="5">
+    </md-input-container>
+</div>
+
+<md-list>
+    <md-list-item layout="column" class="md-2-line"
+                  ng-repeat="artist in (filteredArtists=(artists | filter : filterArtist | limitTo : (limit ? maxResults : undefined)))">
+        <div class="md-list-item-text">
+            <h3 ng-click="!expandAll && toggleExpanded($index)">
+                <span ng-hide="expandAll">
+                    [<span ng-show="artist.expanded">-</span><span ng-hide="artist.expanded">+</span>]
+                </span>
+                {{artist.artist}} ({{artist.tracks.length}})
+            </h3>
+        </div>
+        <md-list-item layout ng-show="expandAll || artist.expanded" class="md-list-item-text" class="md-offset"
+                      ng-repeat="track in artist.tracks | filter : filterTracks">
+            <h4>{{track.title}}</h4>
+            <md-button ng-click="addTrackToPlaylist(track)">
+                <md-icon>playlist_add</md-icon>
+            </md-button>
+        </md-list-item>
+        <md-divider ng-hide="$last"/>
+    </md-list-item>
+</md-list>
 
 
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.5.1/lodash.min.js"></script>
 
 <script src="js/app.js"></script>
 </body>
