@@ -50,7 +50,7 @@
                 });
 
             $scope.toggleExpanded = function (index) {
-                var artist = $scope.artists[index];
+                var artist = $scope.filteredArtists[index];
                 artist.expanded = !artist.expanded;
             };
 
